@@ -77,7 +77,8 @@ public abstract class InLineSettingItem extends LinearLayout {
 
     // The value of the preference may have changed. Update the UI.
     public void reloadPreference() {
-        mIndex = mPreference.findIndexOfValue(mPreference.getValue());
+        if(mPreference != null)
+            mIndex = mPreference.findIndexOfValue(mPreference.getValue());
         updateView();
     }
 
