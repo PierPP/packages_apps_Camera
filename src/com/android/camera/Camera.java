@@ -454,7 +454,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
         // Update last image if URI is invalid and the storage is ready.
         if ((mThumbnail == null || !Util.isUriValid(mThumbnail.getUri(), mContentResolver))
                 && mPicturesRemaining >= 0) {
-            mThumbnail = Thumbnail.getLastThumbnail(mContentResolver,
+           mThumbnail = Thumbnail.getLastThumbnail(mContentResolver,
                 Storage.generateBucketId(mStorage));
         }
         if (mThumbnail != null) {
@@ -1317,6 +1317,7 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
         final String[] OTHER_SETTING_KEYS = {
                 CameraSettings.KEY_RECORD_LOCATION,
                 CameraSettings.KEY_POWER_SHUTTER,
+                CameraSettings.KEY_STORAGE,
                 CameraSettings.KEY_VOLUME_ZOOM,
                 CameraSettings.KEY_STORAGE,
                 CameraSettings.KEY_PICTURE_SIZE,
@@ -2435,6 +2436,12 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
         boolean recordLocation = RecordLocationPreference.get(
                 mPreferences, getContentResolver());
         mLocationManager.recordLocation(recordLocation);
+
+        String storage = CameraSettings.readStorage(mPreferences);
+        if (!storage.equals(mStorage)) {
+            mStorage = storage;
+            checkStorage();
+        }
         
         if (mParameters.isZoomSupported())
             mVolumeZoom = VolumeZoomPreference.get(mPreferences, mContentResolver);
