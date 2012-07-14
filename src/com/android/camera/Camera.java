@@ -2446,12 +2446,6 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
         if (mParameters.isZoomSupported())
             mVolumeZoom = VolumeZoomPreference.get(mPreferences, mContentResolver);
 
-        String storage = CameraSettings.readStorage(mPreferences);
-        if (!storage.equals(mStorage)) {
-            mStorage = storage;
-            checkStorage();
-        }
-
         int cameraId = CameraSettings.readPreferredCameraId(mPreferences);
         if (mCameraId != cameraId) {
             // Restart the activity to have a crossfade animation.
