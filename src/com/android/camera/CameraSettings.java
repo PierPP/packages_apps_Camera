@@ -61,6 +61,8 @@ public class CameraSettings {
     public static final String KEY_VIDEO_FIRST_USE_HINT_SHOWN = "pref_video_first_use_hint_shown_key";
     
     public static final String KEY_POWER_SHUTTER = "pref_power_shutter";
+    public static final String KEY_STORAGE = "pref_camera_storage_key";
+    public static final String KEY_ZSL = "pref_camera_zsl_key";
     public static final String KEY_VOLUME_ZOOM = VolumeZoomPreference.KEY;
     public static final String KEY_STORAGE = "pref_camera_storage_key";
 
@@ -80,23 +82,12 @@ public class CameraSettings {
     private final CameraInfo[] mCameraInfo;
     private final int mCameraId;
 
-    // For setting video size before recording starts
-    private static boolean mEarlyVideoSize;
-
-    // Samsung camcorder mode
-    private static boolean mSamsungCamMode;
-    private static boolean mSamsungCamSettings;
-
     public CameraSettings(Activity activity, Parameters parameters,
                           int cameraId, CameraInfo[] cameraInfo) {
         mContext = activity;
         mParameters = parameters;
         mCameraId = cameraId;
         mCameraInfo = cameraInfo;
-
-        mEarlyVideoSize = mContext.getResources().getBoolean(R.bool.needsEarlyVideoSize);
-        mSamsungCamMode = mContext.getResources().getBoolean(R.bool.needsSamsungCamMode);
-        mSamsungCamSettings = mContext.getResources().getBoolean(R.bool.hasSamsungCamSettings);
     }
 
     public PreferenceGroup getPreferenceGroup(int preferenceRes) {
@@ -196,7 +187,7 @@ public class CameraSettings {
         }
         if (focusMode != null) {
             boolean wantsFocus = mContext.getResources().getBoolean(R.bool.wantsFocusModes)
-                || mSamsungCamSettings;
+                || Util.useSamsungCamSettings();
             if (mParameters.getMaxNumFocusAreas() == 0 || wantsFocus) {
                 filterUnsupportedOptions(group,
                         focusMode, mParameters.getSupportedFocusModes());
@@ -548,7 +539,7 @@ public class CameraSettings {
      * @param on
      */
     public static void setVideoMode(Parameters params, boolean on) {
-        if (mSamsungCamMode) {
+        if (Util.useSamsungCamMode()) {
             params.set("cam_mode", on ? "1" : "0");
         }
     }
@@ -560,7 +551,7 @@ public class CameraSettings {
      * @param profile
      */
     public static void setEarlyVideoSize(Parameters params, CamcorderProfile profile) {
-        if (mEarlyVideoSize) {
+        if (Util.needsEarlyVideoSize()) {
             params.set("video-size", profile.videoFrameWidth + "x" + profile.videoFrameHeight);
         }
     }
