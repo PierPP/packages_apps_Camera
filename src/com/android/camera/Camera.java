@@ -2092,9 +2092,9 @@ public class Camera extends ActivityBase implements FocusManager.Listener,
         mCameraDevice.setErrorCallback(mErrorCallback);
 
         // If we're previewing already, stop the preview first (this will blank
-        // the screen).
+        // the screen).                             
         if (mCameraState != PREVIEW_STOPPED &&
-                 (!R.bool.previewStopsDuringSnapshot || mCameraState != SNAPSHOT_IN_PROGRESS) 
+                 (!getResources().getBoolean(R.bool.previewStopsDuringSnapshot) || mCameraState != SNAPSHOT_IN_PROGRESS) 
            ) 
             stopPreview();
 
